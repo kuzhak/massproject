@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\EmailServiceInterface;
 use App\Services\RequestServiceInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\Request as ModelRequest;
 
@@ -36,13 +37,18 @@ class RequestController extends Controller
         return $this->requestService->createRequest($request->user(), $request->message);
     }
 
-    public function update(Request $request)
+    public function update(int $id, Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
             'comment' => 'required|string|max:3500'
         ]);
-        $answerRequest = $this->requestService->answerRequest($request->id, $request->comment);
-        $this->emailService->send($answerRequest->email, "Response to application", $answerRequest->comment);
+
+        try {
+            $answerRequest = $this->requestService->answerRequest($id, $request->comment);
+            $this->emailService->send($answerRequest->email, "Response to application", $answerRequest->comment);
+            return $answerRequest;
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Request not found'], 404);
+        }
     }
 }
