@@ -18,7 +18,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|max:255',
-            'role' => 'required|string|in:' . User::ROLE_USER . ',' . User::ROLE_RESPONSIBLE . ',' . User::ROLE_ADMIN,
+            'role' => 'required|string|in:' . User::ROLE_USER . ',' . User::ROLE_RESPONSIBLE,
         ]);
         $user = $this->userService->createUser($request->all());
         return response()->json($user, 201);
