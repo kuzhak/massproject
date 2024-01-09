@@ -12,6 +12,49 @@ class UserController extends Controller
     {
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/create",
+     *     summary="Create a new user",
+     *     description="Create a new user with required fields",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "email", "password", "role"},
+     *             @OA\Property(
+     *                 property="name",
+     *                 type="string",
+     *                 maxLength=255
+     *             ),
+     *             @OA\Property(
+     *                 property="email",
+     *                 type="string",
+     *                 format="email",
+     *                 maxLength=255
+     *             ),
+     *             @OA\Property(
+     *                 property="password",
+     *                 type="string",
+     *                 minLength=8,
+     *                 maxLength=255
+     *             ),
+     *             @OA\Property(
+     *                 property="role",
+     *                 type="string",
+     *                 enum={"user", "responsible"}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response="201",
+     *         description="User created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response="422",
+     *         description="Validation error"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $request->validate([
