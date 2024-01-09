@@ -12,13 +12,9 @@ class UserService implements UserServiceInterface
     }
 
     public function createUser(array $userData): User
-    {   $user = $this->userRepository->create($userData);
-        $user->token = $this->createToken($user);
-        return $user;
-    }
-
-    private function createToken(User $user): string
     {
-        return $user->createToken($user->email)->plainTextToken;
+        $user = $this->userRepository->create($userData);
+        $user->token = $user->createToken($user->email)->plainTextToken;
+        return $user;
     }
 }
